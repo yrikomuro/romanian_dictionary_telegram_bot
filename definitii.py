@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 backup_entry_list = []
 backup_title_list = []
-number_list = ['2.', '3.', '4.', '5.', '6.', '7.', '8.', '9.', '1.', 'I.', 'II.', 'III.', *range(1, 100, 1)]
+number_list = ['2.', '3.', '4.', '5.', '6.', '7.', '8.', '9.', '1.', 'I.', 'II.', 'III.', *range(1, 100, 1), '2)', '3)', '4)', '5)', '6)', '7)', '8)', '9)', '1)']
 
 
 def search(processed):
@@ -26,7 +26,7 @@ def search(processed):
         for number in number_list:
             for character in explanation.split():
                 if str(number) == character:
-                    explanation = explanation.replace(f' {character} ', f'\n\n{character.replace('.', '')}) ')
+                    explanation = explanation.replace(f' {character} ', f'\n\n{character.replace('.', ')').replace(')', '')}) ')
 
         if explanation not in del_reps_list:
             del_reps_list.append(explanation)
@@ -36,7 +36,7 @@ def search(processed):
             backup_title_list.append(title)
     for item in del_reps_list:
         for title in title_list:
-            entry = f'{title}\n\n{item.replace(title, '')}'
+            entry = f'🇹🇩{title.upper()}🇹🇩\n\n{item.replace(title, '')}'
             return entry
 
 
@@ -46,7 +46,7 @@ def next_entry():
     backup_entry_list.pop(1)
     backup_title_list.pop(1)
 
-    nextentry = f"{title}\n{explanation.replace(title, '')}"
+    nextentry = f"🇹🇩{title.upper()}🇹🇩\n{explanation.replace(title, '')}"
     return nextentry
 
 
