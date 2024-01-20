@@ -9,6 +9,10 @@ BOT_USERNAME: Final = '@roman_dic_bot'
 
 
 # commands
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('Bună! Scrieți cuvântul pe care îl căutați!\nApăsați "next" pentru următoarea intrare în dicționar!')
+
+
 async def next_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(definitii.next_entry())
 
@@ -47,6 +51,7 @@ if __name__ == '__main__':
     app = Application.builder().token(TOKEN).build()
 
     # commands
+    app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('next', next_command))
 
     # messages
