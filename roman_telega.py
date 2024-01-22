@@ -1,6 +1,13 @@
 from typing import Final
-from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    ContextTypes,
+    ConversationHandler,
+    MessageHandler,
+    filters,
+)
 import definitii
 
 
@@ -8,9 +15,14 @@ TOKEN: Final = '6935360468:AAF2Gie3DY9S9e6vqSKPdQLRFdZOTq4qtDQ'
 BOT_USERNAME: Final = '@roman_dic_bot'
 
 
+reply_keyboard = [["/anki", "/next"]]
+
+keyboard_reply = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True, one_time_keyboard=False)
+
+
 # commands
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Bună! Scrieți cuvântul pe care îl căutați!\nApăsați "next" pentru următoarea intrare în dicționar!')
+    await update.message.reply_text("Input the word you are searching for!", reply_markup=keyboard_reply)
 
 
 async def next_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
