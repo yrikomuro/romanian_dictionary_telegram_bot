@@ -7,9 +7,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from definitii import backup_title_list, backup_entry_list
 
 
-def anki_function(front_info, back_info):
+def add_card():
+    card_front = backup_title_list[0]
+    card_back = backup_entry_list[0]
+
     PATH = '/usr/bin/safaridriver'
     driver = webdriver.Safari(PATH)
     driver.get('https://ankiweb.net/account/login')
@@ -33,14 +37,10 @@ def anki_function(front_info, back_info):
 
     finally:
         fields = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@class='form-control field']")))
-        fields[0].send_keys(front_info)
-        fields[1].send_keys(back_info)
+        fields[0].send_keys(card_front)
+        fields[1].send_keys(card_back)
         card_ready = driver.find_element(By.XPATH, "//*[@class='btn btn-primary btn-large mt-2']")
         card_ready.click()
-        time.sleep(10)
-
-
-front_info = input('enter info for the front field: ')
-back_info = input('enter info for the back field: ')
-anki_function(front_info, back_info)
+        time.sleep(1)
+        driver.close()
 
