@@ -3,7 +3,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-
 backup_entry_list = []
 backup_title_list = []
 number_list = ['2.', '3.', '4.', '5.', '6.', '7.', '8.', '9.', '1.', 'I.', 'II.', 'III.', *range(1, 30, 1), '2)', '3)',
@@ -44,11 +43,11 @@ def search(processed):
 def next_entry():
     explanation = backup_entry_list[1]
     title = backup_title_list[1]
-    backup_entry_list.pop(1)
-    backup_title_list.pop(1)
-
+    backup_entry_list.pop(0)
+    backup_title_list.pop(0)
     nextentry = f"🇹🇩{title.upper()}🇹🇩\n{explanation.replace(title, '')}"
     return nextentry
 
 
-# search('organ')
+
+
