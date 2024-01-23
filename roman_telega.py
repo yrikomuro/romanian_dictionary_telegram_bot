@@ -9,13 +9,14 @@ from telegram.ext import (
     filters,
 )
 import definitii
+import anki
 
 
 TOKEN: Final = '6935360468:AAF2Gie3DY9S9e6vqSKPdQLRFdZOTq4qtDQ'
 BOT_USERNAME: Final = '@roman_dic_bot'
 
 
-reply_keyboard = [["/anki", "/next"]]
+reply_keyboard = [["/add_card", "/next"]]
 
 keyboard_reply = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True, one_time_keyboard=False)
 
@@ -27,6 +28,10 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def next_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(definitii.next_entry())
+
+
+async def anki_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(anki.add_card())
 
 
 # responses
@@ -65,6 +70,7 @@ if __name__ == '__main__':
     # commands
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('next', next_command))
+    app.add_handler(CommandHandler('add_card', anki_command))
 
     # messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
