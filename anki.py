@@ -18,23 +18,27 @@ def add_card():
     driver = webdriver.Safari(PATH)
     driver.get('https://ankiweb.net/account/login')
 
+# logging in using entered email and password
     email = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@placeholder='Email']")))
     email.send_keys('dongfangleisheng@gmail.com')
 
     password = driver.find_element(By.XPATH, "//*[@placeholder='Password']")
     password.send_keys('idontwanttoresetmypassword')
 
+# clicking the login button
     login = driver.find_element(By.XPATH, "//*[@class='btn btn-primary btn-lg']")
     login.click()
     add_button = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.LINK_TEXT, 'Add')))
     add_button.click()
 
+# changing card type for 'basic'
     try:
         card_type = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//*[@class='svelte-apvs86']")))
         card_type.click()
         basic_type = driver.find_element(By.XPATH, "//*[@class='item svelte-apvs86 first']")
         basic_type.click()
 
+# filling the fields
     finally:
         fields = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@class='form-control field']")))
         fields[0].send_keys(card_front)
