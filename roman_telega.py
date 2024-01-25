@@ -1,3 +1,8 @@
+# can't upload big chunks of text to Telegram
+# doesn't input spaces between some words (e.x. 'prin')
+# makes too many indents in back_field (anki) (e.x. 'prin')
+
+
 from typing import Final
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
@@ -9,6 +14,8 @@ from telegram.ext import (
     filters,
 )
 import definitii
+import sinteza
+from sinteza import sinteza_search
 import anki
 
 
@@ -37,7 +44,7 @@ async def anki_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # responses
 def handle_response(text: str) -> str:
     processed: str = text.lower()
-    return definitii.search(processed)
+    return sinteza.sinteza_search(processed)
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
