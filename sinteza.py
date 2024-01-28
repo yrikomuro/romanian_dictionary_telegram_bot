@@ -7,12 +7,12 @@ def sinteza_search(processed):
 
     definitii.backup_title_list.clear()
     definitii.backup_entry_list.clear()
-
     PATH = '/usr/bin/safaridriver'
     driver = webdriver.Safari(PATH)
     driver.get(f'https://dexonline.ro/definitie/{processed}')
 
     title_source = driver.find_element(By.XPATH, "//*[@class='tree-heading']")
+    speech_part_source = driver.find_element(By.XPATH, "//*[@class='tree-pos-info']")
     sources = driver.find_elements(By.XPATH, "//*[@class='tree-body']")
     first_source = sources[0]
     meaning_rows = first_source.find_elements(By.XPATH, ".//*[@class='def html']")
@@ -36,11 +36,13 @@ def sinteza_search(processed):
                 list1.pop(replace_index)
                 list1.insert(replace_index, f'\n\n{ident}')
 
-    explanation = ' '.join(list1)
-    title = title_source.text.upper()
-    entry = f'🔎{title}{explanation}'
+    explanation = f"\n{speech_part_source.text}{' '.join(list1)}"
+    title = title_source.text
 
-    definitii.backup_title_list.append(title)
-    definitii.backup_entry_list.append(explanation)
+    new_title = title.replace(speech_part_source.text, '').upper()
+    entry = f'🔎{new_title}{explanation}'
+
+    definitii.backup_title_list.append(new_title)
+    definitii.backup_entry_list.append(f'{new_title}{explanation}')
     definitii.search(processed)
     return entry
