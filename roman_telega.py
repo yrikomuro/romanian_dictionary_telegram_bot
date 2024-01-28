@@ -1,11 +1,13 @@
 # can't upload big chunks of text to Telegram
 # doesn't input spaces between some words (e.x. 'prin')
 # makes too many indents in back_field (anki) (e.x. 'prin')
+# anki button works only for the last search (because of list deleting)
 
-
+import asyncio
 from typing import Final
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
+    CallbackQueryHandler,
     Application,
     CommandHandler,
     ContextTypes,
@@ -15,7 +17,6 @@ from telegram.ext import (
 )
 import definitii
 import sinteza
-from sinteza import sinteza_search
 import anki
 
 
@@ -23,22 +24,32 @@ TOKEN: Final = '6935360468:AAF2Gie3DY9S9e6vqSKPdQLRFdZOTq4qtDQ'
 BOT_USERNAME: Final = '@roman_dic_bot'
 
 
-reply_keyboard = [["/add_card", "/next"]]
-
-keyboard_reply = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True, one_time_keyboard=False)
-
-
 # commands
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Input the word you are searching for!", reply_markup=keyboard_reply)
+    await update.message.reply_text('''
+    looking for dictionary entries on dexonline.ro
+    
+🧩 stands for 'Definitii' entry
+
+🔎 stands for 'Sinteza' entry
+    ''')
 
 
-async def next_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(definitii.next_entry())
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [
+            InlineKeyboardButton("add 2 anki", callback_data="1"),
+            InlineKeyboardButton("next entry", callback_data="2"),
+        ]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
-
-async def anki_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(anki.add_card())
+    query = update.callback_query
+    await query.answer()
+    if query.data == '1':
+        await query.message.reply_text(anki.add_card(), reply_markup=reply_markup)
+    if query.data == '2':
+        await query.message.reply_text(definitii.next_entry(), reply_markup=reply_markup)
 
 
 # responses
@@ -50,6 +61,14 @@ def handle_response(text: str) -> str:
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_type: str = update.message.chat.type
     text: str = update.message.text
+
+    keyboard = [
+        [
+            InlineKeyboardButton("add 2 anki", callback_data="1"),
+            InlineKeyboardButton("next entry", callback_data="2"),
+        ]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
     print(f'User ({update.message.chat.id}) in {message_type}: "{text}"')
 
@@ -63,7 +82,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         response: str = handle_response(text)
 
     print('Bot:', response)
-    await update.message.reply_text(response)
+    await update.message.reply_text(response, reply_markup=reply_markup)
 
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -76,8 +95,7 @@ if __name__ == '__main__':
 
     # commands
     app.add_handler(CommandHandler('start', start_command))
-    app.add_handler(CommandHandler('next', next_command))
-    app.add_handler(CommandHandler('add_card', anki_command))
+    app.add_handler(CallbackQueryHandler(button))
 
     # messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
