@@ -47,4 +47,3 @@ def add_card():
         card_ready.click()
         time.sleep(1)
         driver.close()
-
