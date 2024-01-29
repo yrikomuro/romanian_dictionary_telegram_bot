@@ -1,4 +1,5 @@
 import requests
+import telegram.error
 from bs4 import BeautifulSoup
 
 backup_entry_list = []
