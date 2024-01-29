@@ -20,10 +20,10 @@ def add_card():
 
 # logging in using entered email and password
     email = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@placeholder='Email']")))
-    email.send_keys('dongfangleisheng@gmail.com')
+    email.send_keys('')
 
     password = driver.find_element(By.XPATH, "//*[@placeholder='Password']")
-    password.send_keys('idontwanttoresetmypassword')
+    password.send_keys('')
 
 # clicking the login button
     login = driver.find_element(By.XPATH, "//*[@class='btn btn-primary btn-lg']")
